@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Locum Project — Registrace lékaře</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-900: #1a3d2b;
+    --green-700: #2D6A4F;
+    --green-500: #52B788;
+    --green-200: #b7e4c7;
+    --green-100: #d8f3dc;
+    --green-50:  #edf7f0;
+    --cream-bg:  #FDFAF5;
+    --cream-200: #F0EBE0;
+    --cream-300: #E4DDD2;
+    --cream-400: #D8CEBC;
+    --text-dark:  #1C2B22;
+    --text-mid:   #4A5E53;
+    --text-light: #8FA898;
+    --error:      #c0392b;
+    --error-bg:   #fef2f0;
+    --radius:     10px;
+    --shadow:     0 2px 20px rgba(45,106,79,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream-bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 5rem;
+  }
+
+  .form-wrap {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  /* ─── HEADER ─── */
+  .brand-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+
+  .logo-mark { width: 32px; height: 32px; }
+
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--green-700);
+    letter-spacing: -0.02em;
+  }
+
+  .form-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    line-height: 1.15;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  /* ─── TRUST BAR ─── */
+  .trust-bar {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1.5rem 0 2rem;
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    font-weight: 500;
+  }
+  .trust-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--green-500);
+    flex-shrink: 0;
+  }
+
+  /* ─── STEPS ─── */
+  .step-nav {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 2rem;
+  }
+  .step-pill {
+    flex: 1;
+    height: 4px;
+    background: var(--cream-300);
+    border-radius: 99px;
+    transition: background 0.3s;
+  }
+  .step-pill.done { background: var(--green-700); }
+  .step-pill.active { background: var(--green-500); }
+
+  .step-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--green-700);
+    margin-bottom: 0.5rem;
+  }
+
+  .step { display: none; }
+  .step.active { display: block; }
+
+  /* ─── CARD ─── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--cream-200);
+    border-radius: 14px;
+    padding: 1.75rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--green-700);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ─── FIELDS ─── */
+  .row { display: grid; gap: 1rem; margin-bottom: 1rem; }
+  .row-2 { grid-template-columns: 1fr 1fr; }
+  .row-3 { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 560px) { .row-2, .row-3 { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-mid);
+  }
+  label .req { color: var(--green-700); margin-left: 2px; }
+  .field-hint {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: -2px;
+  }
+
+  input, select, textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: var(--cream-bg);
+    border: 1.5px solid var(--cream-400);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.9rem;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    appearance: none;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green-700);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.08);
+  }
+
+  input.error, select.error { border-color: var(--error); background: var(--error-bg); }
+
+  .field-error {
+    font-size: 0.73rem;
+    color: var(--error);
+    display: none;
+  }
+  .field-error.show { display: block; }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A5E53' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+
+  textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+
+  /* ─── CHIPS ─── */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 15px;
+    border-radius: 99px;
+    border: 1.5px solid var(--cream-400);
+    background: var(--cream-bg);
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--green-700); color: var(--green-700); }
+  .chip.active {
+    border-color: var(--green-700);
+    background: var(--green-700);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  /* ─── CHECKBOX ─── */
+  .checkbox-group { display: flex; flex-direction: column; gap: 0.6rem; }
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .checkbox-item input[type="checkbox"] {
+    width: 18px; height: 18px; min-width: 18px;
+    margin-top: 1px; border-radius: 5px;
+    border: 1.5px solid var(--cream-400);
+    background: var(--cream-bg);
+    cursor: pointer; padding: 0;
+    appearance: auto; accent-color: var(--green-700);
+  }
+  .checkbox-item span {
+    font-size: 0.83rem; color: var(--text-mid); line-height: 1.5;
+  }
+  .checkbox-item span a {
+    color: var(--green-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .divider { height: 1px; background: var(--cream-200); margin: 1.25rem 0; }
+
+  /* ─── BUTTONS ─── */
+  .btn-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 0.85rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    border: none;
+    letter-spacing: 0.01em;
+  }
+  .btn:active { transform: scale(0.99); }
+
+  .btn-primary {
+    background: var(--green-700);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--green-900); }
+  .btn-primary:disabled { background: var(--cream-400); cursor: not-allowed; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid var(--cream-400);
+  }
+  .btn-secondary:hover { border-color: var(--green-700); color: var(--green-700); }
+
+  .submit-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 0.6rem;
+  }
+
+  /* ─── SUCCESS ─── */
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--cream-200);
+    box-shadow: var(--shadow);
+  }
+  .success-icon {
+    width: 60px; height: 60px;
+    background: var(--green-100);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+  .success-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+  .success-text {
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    line-height: 1.65;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+  }
+  .next-steps {
+    text-align: left;
+    width: 100%;
+    max-width: 360px;
+  }
+  .next-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0.6rem 0;
+  }
+  .next-step:not(:last-child) { border-bottom: 1px solid var(--cream-200); }
+  .step-num {
+    width: 24px; height: 24px; min-width: 24px;
+    border-radius: 50%;
+    background: var(--green-50);
+    color: var(--green-700);
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .step-desc {
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  .spinner {
+    display: none;
+    width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── SALARY RANGE ─── */
+  .range-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .range-val {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--green-700);
+    font-family: 'DM Serif Display', serif;
+    min-width: 100px;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 99px;
+    background: var(--cream-300);
+    border: none;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--green-700);
+    border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--green-700);
+    border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="form-wrap">
+
+  <div class="brand-header">
+    <div class="brand-logo">
+      <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="7" height="7" rx="2" fill="#2D6A4F" opacity="0.3"/>
+        <rect x="11" y="2" width="7" height="7" rx="2" fill="#2D6A4F" opacity="0.5"/>
+        <rect x="20" y="2" width="7" height="7" rx="2" fill="#2D6A4F" opacity="0.7"/>
+        <rect x="29" y="2" width="5" height="7" rx="2" fill="#2D6A4F"/>
+        <rect x="2" y="11" width="7" height="7" rx="2" fill="#2D6A4F" opacity="0.5"/>
+        <rect x="11" y="11" width="7" height="7" rx="2" fill="#2D6A4F" opacity="0.7"/>
+        <rect x="20" y="11" width="7" height="7" rx="2" fill="#2D6A4F"/>
+        <rect x="29" y="11" width="5" height="7" rx="2" fill="#2D6A4F" opacity="0.4"/>
+        <rect x="2" y="20" width="7" height="7" rx="2" fill="#2D6A4F" opacity="0.7"/>
+        <rect x="11" y="20" width="7" height="7" rx="2" fill="#2D6A4F"/>
+        <rect x="20" y="20" width="7" height="7" rx="2" fill="#2D6A4F" opacity="0.5"/>
+        <rect x="2" y="29" width="7" height="5" rx="2" fill="#2D6A4F"/>
+        <rect x="11" y="29" width="7" height="5" rx="2" fill="#2D6A4F" opacity="0.5"/>
+      </svg>
+      <span class="brand-name">Locum Project</span>
+    </div>
+    <h1 class="form-title">Registrace lékaře</h1>
+    <p class="form-subtitle">Vyplňte profil a začněte dostávat nabídky zástupů ve svém oboru a regionu. Registrace je nezávazná a zdarma.</p>
+  </div>
+
+  <!-- Trust bar -->
+  <div class="trust-bar">
+    <div class="trust-item">
+      <svg class="trust-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>
+      Údaje v bezpečí
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+      Smlouva přímo s nemocnicí
+    </div>
+    <div class="trust-item">
+      <svg class="trust-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z"/></svg>
+      Bez prostředníka
+    </div>
+  </div>
+
+  <!-- Step navigation -->
+  <div class="step-nav">
+    <div class="step-pill active" data-step="0"></div>
+    <div class="step-pill" data-step="1"></div>
+    <div class="step-pill" data-step="2"></div>
+    <div class="step-pill" data-step="3"></div>
+  </div>
+
+  <form id="registrationForm" novalidate>
+
+    <!-- ═══ STEP 0: Osobní údaje ═══ -->
+    <div class="step active" data-step="0">
+      <div class="card">
+        <div class="card-title">Osobní údaje</div>
+        <div class="row row-3">
+          <div class="field">
+            <label>Titul</label>
+            <input type="text" name="titul_pred" id="titul_pred" placeholder="MUDr.">
+          </div>
+          <div class="field">
+            <label>Jméno <span class="req">*</span></label>
+            <input type="text" name="jmeno" id="jmeno" autocomplete="given-name" required>
+            <span class="field-error" id="err_jmeno">Povinné pole</span>
+          </div>
+          <div class="field">
+            <label>Příjmení <span class="req">*</span></label>
+            <input type="text" name="prijmeni" id="prijmeni" autocomplete="family-name" required>
+            <span class="field-error" id="err_prijmeni">Povinné pole</span>
+          </div>
+        </div>
+        <div class="row row-2">
+          <div class="field">
+            <label>E-mail <span class="req">*</span></label>
+            <input type="email" name="email" id="email" placeholder="jan.novak@email.cz" autocomplete="email" required>
+            <span class="field-error" id="err_email">Zadejte platný e-mail</span>
+          </div>
+          <div class="field">
+            <label>Telefon <span class="req">*</span></label>
+            <input type="tel" name="telefon" id="telefon" placeholder="+420 777 000 000" autocomplete="tel" required>
+            <span class="field-error" id="err_telefon">Povinné pole</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" onclick="goStep(1)">Pokračovat</button>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 1: Odbornost ═══ -->
+    <div class="step" data-step="1">
+      <div class="card">
+        <div class="card-title">Odbornost</div>
+        <div class="row">
+          <div class="field">
+            <label>Specializace <span class="req">*</span></label>
+            <select name="specializace" id="specializace" required>
+              <option value="">— vyberte obor —</option>
+              <optgroup label="Primární péče">
+                <option>Všeobecné praktické lékařství</option>
+                <option>Praktický lékař pro děti a dorost</option>
+              </optgroup>
+              <optgroup label="Hospitalizační obory">
+                <option>Interna / Všeobecné lékařství</option>
+                <option>Chirurgie</option>
+                <option>Anesteziologie a resuscitace</option>
+                <option>Urgentní medicína</option>
+                <option>Neurologie</option>
+                <option>Psychiatrie</option>
+                <option>Gynekologie a porodnictví</option>
+                <option>Pediatrie</option>
+                <option>Ortopedie</option>
+                <option>Urologie</option>
+                <option>ORL</option>
+                <option>Kardiologie</option>
+                <option>Onkologie</option>
+                <option>Radiologie</option>
+              </optgroup>
+              <optgroup label="Ostatní">
+                <option>Jiné (upřesněte v poznámce)</option>
+              </optgroup>
+            </select>
+            <span class="field-error" id="err_specializace">Povinné pole</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Stupeň vzdělání <span class="req">*</span></label>
+            <div class="chip-group" id="stupen_chips">
+              <span class="chip" data-val="Před kmenem">Před kmenem</span>
+              <span class="chip" data-val="Po kmeni">Po kmeni</span>
+              <span class="chip" data-val="Atestace">Atestace</span>
+            </div>
+            <input type="hidden" name="stupen" id="stupen_val">
+            <span class="field-error" id="err_stupen">Vyberte jednu možnost</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row row-2">
+          <div class="field">
+            <label>Číslo ČLK</label>
+            <input type="text" name="clk" id="clk" placeholder="00000">
+            <span class="field-hint">Nepovinné — ověříme při onboardingu</span>
+          </div>
+          <div class="field">
+            <label>Roků praxe</label>
+            <select name="praxe" id="praxe">
+              <option value="">—</option>
+              <option>&lt; 1 rok</option>
+              <option>1–3 roky</option>
+              <option>4–9 let</option>
+              <option>10–19 let</option>
+              <option>20+ let</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Současné pracoviště</label>
+            <input type="text" name="pracoviste" id="pracoviste" placeholder="Např. KN Liberec, PLDD Turnov…">
+            <span class="field-hint">Pomáhá nám pochopit vaši zkušenost</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="goStep(0)">Zpět</button>
+        <button type="button" class="btn btn-primary" onclick="goStep(2)">Pokračovat</button>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2: Dostupnost ═══ -->
+    <div class="step" data-step="2">
+      <div class="card">
+        <div class="card-title">Dostupnost a preference</div>
+
+        <div class="field" style="margin-bottom:1.25rem;">
+          <label>Typ zařízení</label>
+          <div class="chip-group" id="zarizeni_chips">
+            <span class="chip" data-val="Nemocnice">Nemocnice</span>
+            <span class="chip" data-val="Ambulance">Ambulance</span>
+            <span class="chip" data-val="LSPP">LSPP</span>
+          </div>
+          <input type="hidden" name="zarizeni" id="zarizeni_val">
+          <span class="field-hint">Můžete vybrat více</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" style="margin-bottom:1.25rem;">
+          <label>Preference směn</label>
+          <div class="chip-group" id="smeny_chips">
+            <span class="chip" data-val="Denní">Denní</span>
+            <span class="chip" data-val="Noční">Noční</span>
+            <span class="chip" data-val="Víkendy">Víkendy</span>
+            <span class="chip" data-val="Svátky">Svátky</span>
+            <span class="chip" data-val="24h služby">24h služby</span>
+          </div>
+          <input type="hidden" name="smeny" id="smeny_val">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field" style="margin-bottom:1.25rem;">
+          <label>Kraje, kde chcete pracovat <span class="req">*</span></label>
+          <div class="chip-group" id="kraj_chips">
+            <span class="chip" data-val="Liberecký">Liberecký</span>
+            <span class="chip" data-val="Ústecký">Ústecký</span>
+            <span class="chip" data-val="Královéhradecký">Královéhradecký</span>
+            <span class="chip" data-val="Pardubický">Pardubický</span>
+            <span class="chip" data-val="Středočeský">Středočeský</span>
+            <span class="chip" data-val="Praha">Praha</span>
+            <span class="chip" data-val="Karlovarský">Karlovarský</span>
+            <span class="chip" data-val="Plzeňský">Plzeňský</span>
+            <span class="chip" data-val="Jihočeský">Jihočeský</span>
+            <span class="chip" data-val="Vysočina">Vysočina</span>
+            <span class="chip" data-val="Jihomoravský">Jihomoravský</span>
+            <span class="chip" data-val="Olomoucký">Olomoucký</span>
+            <span class="chip" data-val="Zlínský">Zlínský</span>
+            <span class="chip" data-val="Moravskoslezský">Moravskoslezský</span>
+          </div>
+          <input type="hidden" name="kraje" id="kraje_val">
+          <span class="field-error" id="err_kraje">Vyberte alespoň jeden kraj</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row row-2">
+          <div class="field">
+            <label>Kolik hodin / měsíc</label>
+            <select name="kapacita" id="kapacita">
+              <option value="">—</option>
+              <option>Do 20 hodin</option>
+              <option>20–40 hodin</option>
+              <option>40–80 hodin</option>
+              <option>80+ hodin</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Dostupný od <span class="req">*</span></label>
+            <input type="date" name="dostupnost_od" id="dostupnost_od" required>
+            <span class="field-error" id="err_dostupnost_od">Povinné pole</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="goStep(1)">Zpět</button>
+        <button type="button" class="btn btn-primary" onclick="goStep(3)">Pokračovat</button>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 3: Sazba + souhlas ═══ -->
+    <div class="step" data-step="3">
+      <div class="card">
+        <div class="card-title">Odměna</div>
+        <div class="field">
+          <label>Orientační hodinová sazba (Kč/h)</label>
+          <div class="range-display">
+            <input type="range" name="sazba" id="sazba" min="400" max="2500" step="50" value="1000">
+            <span class="range-val" id="sazba_display">1 000 Kč/h</span>
+          </div>
+          <span class="field-hint">Pouze orientační — konkrétní sazba záleží na nemocnici a typu směny</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Poznámky a souhlas</div>
+        <div class="row">
+          <div class="field">
+            <label>Poznámky (volitelné)</label>
+            <textarea name="poznamky" id="poznamky" placeholder="Cokoliv, co bychom měli vědět — další certifikáty, omezení, preference…"></textarea>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <details class="gdpr-details" style="margin-bottom:1rem;">
+          <summary style="font-size:0.82rem;font-weight:500;color:var(--green-700);cursor:pointer;user-select:none;padding:0.5rem 0;">Informace o zpracování osobních údajů</summary>
+          <div style="font-size:0.78rem;color:var(--text-mid);line-height:1.7;padding:0.75rem 1rem;background:var(--green-50);border-radius:8px;margin-top:0.25rem;">
+            <p><strong>Správce údajů:</strong> MUDr. Roman Čeloud, kontaktní e-mail: r.celoud@gmail.com</p>
+            <p style="margin-top:0.4rem;"><strong>Účel zpracování:</strong> Zařazení do databáze lékařů platformy Locum Project a kontaktování v souvislosti s nabídkami krátkodobých zástupů ve zdravotnických zařízeních.</p>
+            <p style="margin-top:0.4rem;"><strong>Rozsah zpracovávaných údajů:</strong> Jméno, příjmení, e-mail, telefon, kraj, specializace, číslo ČLK a preference uvedené v tomto formuláři.</p>
+            <p style="margin-top:0.4rem;"><strong>Právní základ:</strong> Váš souhlas podle čl. 6 odst. 1 písm. a) nařízení GDPR (Nařízení EU 2016/679).</p>
+            <p style="margin-top:0.4rem;"><strong>Doba uchování:</strong> Údaje budou zpracovávány do odvolání souhlasu, nejdéle po dobu 3 let od udělení souhlasu.</p>
+            <p style="margin-top:0.4rem;"><strong>Příjemci údajů:</strong> Údaje nejsou předávány třetím stranám ani mimo území EU.</p>
+            <p style="margin-top:0.4rem;"><strong>Vaše práva:</strong> Máte právo svůj souhlas kdykoli odvolat, požádat o přístup ke svým údajům, jejich opravu, výmaz nebo přenositelnost, a podat stížnost u Úřadu pro ochranu osobních údajů (uoou.cz). Žádost zasílejte na výše uvedený e-mail správce.</p>
+          </div>
+        </details>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" name="gdpr" id="gdpr" required>
+            <span>Byl/a jsem seznámen/a s výše uvedenými informacemi o zpracování osobních údajů a souhlasím se zpracováním svých osobních údajů správcem MUDr. Romanem Čeloudem za účelem zařazení do databáze lékařů platformy Locum Project. <span class="req">*</span></span>
+          </label>
+        </div>
+        <span class="field-error" id="err_gdpr">Povinný souhlas</span>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="goStep(2)">Zpět</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <span id="btnText">Odeslat registraci</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+      </div>
+      <p class="submit-note">Registrace je nezávazná. Žádné poplatky.</p>
+    </div>
+
+  </form>
+
+  <!-- ═══ SUCCESS ═══ -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M6 14l6 6 10-10" stroke="#2D6A4F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2 class="success-title">Registrace přijata</h2>
+    <p class="success-text">Děkujeme. Váš profil je zaevidován. O dalším postupu vás budeme informovat.</p>
+  </div>
+
+</div>
+
+<script>
+  // ─── CONFIG ────────────────────────────────────────────────────────────────
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyOD5O-Y0frtR7fcjQ4wOpGne8Awqq5APp4OWtb7AfS8-7tpURZQPfa5rIzpiytg1Fh/exec";
+
+  let currentStep = 0;
+  const totalSteps = 4;
+
+  // ─── NAVIGATION ────────────────────────────────────────────────────────────
+  function goStep(n) {
+    // Validate current step before moving forward
+    if (n > currentStep && !validateStep(currentStep)) return;
+
+    currentStep = n;
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.querySelector(`.step[data-step="${n}"]`).classList.add('active');
+
+    document.querySelectorAll('.step-pill').forEach((p, i) => {
+      p.classList.remove('active', 'done');
+      if (i < n) p.classList.add('done');
+      if (i === n) p.classList.add('active');
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ─── CHIPS ─────────────────────────────────────────────────────────────────
+  function initMultiChips(groupId, hiddenId) {
+    document.getElementById(groupId).addEventListener('click', function(e) {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      chip.classList.toggle('active');
+      const vals = [...this.querySelectorAll('.chip.active')].map(c => c.dataset.val);
+      document.getElementById(hiddenId).value = vals.join(', ');
+    });
+  }
+  initMultiChips('zarizeni_chips', 'zarizeni_val');
+  initMultiChips('smeny_chips', 'smeny_val');
+  initMultiChips('kraj_chips', 'kraje_val');
+
+  // Stupen — single select
+  document.getElementById('stupen_chips').addEventListener('click', function(e) {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    this.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    document.getElementById('stupen_val').value = chip.dataset.val;
+    showErr('stupen', false);
+  });
+
+  // ─── RANGE SLIDER ──────────────────────────────────────────────────────────
+  const sazbaEl = document.getElementById('sazba');
+  const sazbaDisplay = document.getElementById('sazba_display');
+  function updateSazba() {
+    sazbaDisplay.textContent = parseInt(sazbaEl.value).toLocaleString('cs-CZ') + ' Kč/h';
+  }
+  sazbaEl.addEventListener('input', updateSazba);
+  updateSazba();
+
+  // ─── VALIDATION ────────────────────────────────────────────────────────────
+  function showErr(id, show) {
+    const el = document.getElementById('err_' + id);
+    if (el) el.classList.toggle('show', show);
+    const field = document.getElementById(id);
+    if (field && field.tagName !== 'DIV') field.classList.toggle('error', show);
+  }
+
+  function validateStep(step) {
+    let ok = true;
+
+    if (step === 0) {
+      ['jmeno','prijmeni','telefon'].forEach(id => {
+        const empty = !document.getElementById(id).value.trim();
+        showErr(id, empty);
+        if (empty) ok = false;
+      });
+      const emailEl = document.getElementById('email');
+      const emailBad = !emailEl.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value);
+      showErr('email', emailBad);
+      if (emailBad) ok = false;
+    }
+
+    if (step === 1) {
+      const specEmpty = !document.getElementById('specializace').value;
+      showErr('specializace', specEmpty);
+      if (specEmpty) ok = false;
+
+      const stupenEmpty = !document.getElementById('stupen_val').value;
+      showErr('stupen', stupenEmpty);
+      if (stupenEmpty) ok = false;
+    }
+
+    if (step === 2) {
+      const krajeEmpty = !document.getElementById('kraje_val').value;
+      showErr('kraje', krajeEmpty);
+      if (krajeEmpty) ok = false;
+
+      const datEmpty = !document.getElementById('dostupnost_od').value;
+      showErr('dostupnost_od', datEmpty);
+      if (datEmpty) ok = false;
+    }
+
+    return ok;
+  }
+
+  // ─── SUBMIT ────────────────────────────────────────────────────────────────
+  document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Final validation
+    if (!document.getElementById('gdpr').checked) {
+      showErr('gdpr', true);
+      return;
+    } else showErr('gdpr', false);
+
+    const btn = document.getElementById('submitBtn');
+    document.getElementById('btnText').style.display = 'none';
+    document.getElementById('spinner').style.display = 'block';
+    btn.disabled = true;
+
+    const data = {};
+    new FormData(this).forEach((v, k) => data[k] = v);
+    data['timestamp'] = new Date().toLocaleString('cs-CZ');
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch(err) {
+      console.warn('Fetch error (no-cors expected):', err);
+    }
+
+    document.getElementById('registrationForm').style.display = 'none';
+    document.querySelector('.step-nav').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'flex';
+  });
+</script>
+</body>
+</html>
