@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reliva — Registrace lékaře</title>
+<title>Locum Project — Registrace lékaře</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -229,6 +229,61 @@
     text-underline-offset: 2px;
   }
 
+  .gdpr-details {
+    background: var(--green-100);
+    border: 1px solid var(--green-500);
+    border-radius: 10px;
+    padding: 0;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .gdpr-details summary {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--green-900);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+  .gdpr-details summary::-webkit-details-marker { display: none; }
+  .gdpr-details summary::before {
+    content: "▸";
+    font-size: 0.75rem;
+    transition: transform 0.2s;
+    color: var(--green-700);
+  }
+  .gdpr-details[open] summary::before {
+    transform: rotate(90deg);
+  }
+  .gdpr-details summary:hover {
+    background: rgba(82, 183, 136, 0.12);
+  }
+  .gdpr-content {
+    padding: 4px 16px 16px;
+    border-top: 1px solid var(--green-500);
+    background: rgba(255, 255, 255, 0.4);
+  }
+  .gdpr-content p {
+    font-size: 0.8rem;
+    color: var(--text-dark);
+    line-height: 1.55;
+    margin: 0 0 0.55rem;
+  }
+  .gdpr-content p:last-child { margin-bottom: 0; }
+  .gdpr-content strong {
+    color: var(--green-900);
+    font-weight: 600;
+  }
+  .gdpr-content a {
+    color: var(--green-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
   .chip-group {
     display: flex;
     flex-wrap: wrap;
@@ -357,11 +412,11 @@
         <rect x="2" y="29" width="7" height="5" rx="2" fill="#2D6A4F"/>
         <rect x="11" y="29" width="7" height="5" rx="2" fill="#2D6A4F" opacity="0.5"/>
       </svg>
-      <span class="brand-name">Reliva</span>
+      <span class="brand-name">Locum Project</span>
     </div>
     <div style="background:#fff;border:1px solid var(--cream-200);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.75rem;border-left:3px solid var(--green-700);">
       <p style="font-size:0.88rem;color:var(--text-mid);line-height:1.65;margin:0;">
-        <strong style="color:var(--green-700);font-weight:500;">Reliva</strong> je digitální platforma propojující lékaře se zdravotnickými zařízeními, která hledají krátkodobou výpomoc. Registrací získáte přístup k nabídkám zástupů v nemocnicích, ambulancích i na LSPP — ve vašem regionu, ve vašem oboru, ve vašem čase.
+        <strong style="color:var(--green-700);font-weight:500;">Locum Project</strong> je digitální platforma propojující lékaře se zdravotnickými zařízeními, která hledají krátkodobou výpomoc. Registrací získáte přístup k nabídkám zástupů v nemocnicích, ambulancích i na LSPP — ve vašem regionu, ve vašem oboru, ve vašem čase.
       </p>
     </div>
     <h1 class="form-title">Nezávazná registrace lékaře</h1>
@@ -576,7 +631,7 @@
         <div class="field">
           <label>Domovská obec / město</label>
           <input type="text" name="domovska_obec" id="domovska_obec" placeholder="Liberec">
-          <span style="font-size: 11px; color: var(--text-light); display: block; margin-top: 4px;">Pomáhá Reliva navrhovat blízké nabídky, neovlivňuje sazbu</span>
+          <span style="font-size: 11px; color: var(--text-light); display: block; margin-top: 4px;">Pomáhá Locum Project navrhovat blízké nabídky, neovlivňuje sazbu</span>
         </div>
       </div>
 
@@ -609,7 +664,7 @@
         <div class="field">
           <label>Specifické výjimky pro konkrétní destinace (volitelné)</label>
           <textarea name="vyjimky_destinace" id="vyjimky_destinace" placeholder="Např.: Jilemnici beru za 1 000 Kč/h. Mladou Boleslav nejedu vůbec. Pro NIP min. 1 400 Kč/h."></textarea>
-          <span style="font-size: 11px; color: var(--text-light); display: block; margin-top: 4px;">Reliva tyto výjimky bere v potaz při ručním matchingu (M1–M6)</span>
+          <span style="font-size: 11px; color: var(--text-light); display: block; margin-top: 4px;">Locum Project tyto výjimky bere v potaz při ručním matchingu (M1–M6)</span>
         </div>
       </div>
     </div>
@@ -660,11 +715,39 @@
     </div>
 
     <div class="card">
-      <div class="card-title">Souhlas</div>
+      <div class="card-title">Souhlas se zpracováním osobních údajů</div>
+
+      <details class="gdpr-details">
+        <summary>Zobrazit informace o zpracování osobních údajů</summary>
+        <div class="gdpr-content">
+          <p>
+            <strong>Správce osobních údajů:</strong> MUDr. Roman Čeloud, jako fyzická osoba zakládající platformu Locum Project. Kontakt: <a href="mailto:r.celoud@gmail.com">r.celoud@gmail.com</a>. Po založení s.r.o. dojde k převedení správcovství na společnost, o čemž budete informován/a e-mailem.
+          </p>
+          <p>
+            <strong>Účel zpracování:</strong> Zařazení do databáze lékařů platformy Locum Project pro zprostředkování krátkodobých zástupů a kontaktu s nemocnicemi a zdravotnickými zařízeními.
+          </p>
+          <p>
+            <strong>Rozsah zpracovávaných údajů:</strong> Identifikační (jméno, příjmení, titul), kontaktní (e-mail, telefon), profesní (specializace, kraj, atestační stupeň, ochota brát scope/backup), preferenční (sazba, dojezd, dostupnost) a uživatelské poznámky.
+          </p>
+          <p>
+            <strong>Právní základ:</strong> Váš souhlas dle čl. 6 odst. 1 písm. a) nařízení GDPR (Nařízení EU 2016/679).
+          </p>
+          <p>
+            <strong>Doba uchování:</strong> Údaje budou zpracovávány do odvolání souhlasu, nejdéle však 3 roky od udělení souhlasu. Po této době budou anonymizovány nebo smazány.
+          </p>
+          <p>
+            <strong>Příjemci údajů:</strong> Údaje nejsou předávány třetím stranám ani mimo území EU/EHP. Po spuštění platformy budou profilové údaje (bez kontaktních) zobrazeny registrovaným zdravotnickým zařízením; kontaktní údaje budou předány teprve po vzájemném potvrzení směny.
+          </p>
+          <p>
+            <strong>Vaše práva:</strong> Máte právo svůj souhlas kdykoli odvolat (bez vlivu na zákonnost předchozího zpracování), požádat o přístup ke svým údajům, jejich opravu, výmaz, omezení zpracování nebo přenositelnost. Máte také právo podat stížnost u Úřadu pro ochranu osobních údajů (<a href="https://www.uoou.cz" target="_blank" rel="noopener">uoou.cz</a>). Žádost zasílejte na výše uvedený e-mail správce; bude vyřízena do 30 dnů.
+          </p>
+        </div>
+      </details>
+
       <div class="checkbox-group">
         <label class="checkbox-item">
           <input type="checkbox" name="gdpr" id="gdpr" required>
-          <span>Souhlasím se zpracováním osobních údajů v souladu s <a href="#" onclick="return false;">Zásadami ochrany osobních údajů</a>. <span class="req">*</span></span>
+          <span>Byl/a jsem seznámen/a s výše uvedenými informacemi a souhlasím se zpracováním svých osobních údajů správcem MUDr. Romanem Čeloudem za účelem zařazení do databáze lékařů platformy Locum Project. <span class="req">*</span></span>
         </label>
       </div>
       <span class="field-error" id="err_gdpr">Povinný souhlas</span>
