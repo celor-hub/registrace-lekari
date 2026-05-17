@@ -775,9 +775,13 @@
 
 <script>
   // ─── KONFIGURACE ──────────────────────────────────────────────────────────────
-  // Sem vložte URL vašeho Google Apps Script Web App po nasazení:
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ⚠ KONFIGURACE — NUTNÉ NASTAVIT PŘED PRVNÍM POUŽITÍM
+  // Nahraď URL níže svou vlastní Google Apps Script Web App URL.
+  // Návod jak ji získat: locum_apps_script_navod.html
+  // Bez této úpravy se data nikam neuloží (formulář to detekuje a upozorní).
+  // ═══════════════════════════════════════════════════════════════════════════
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSCLrfsLywz1FddqJFAlVhF0_JG2_bkxiabEBiRgu-TYrWERzFolxYHYU70SGpAnyHbA/exec";
-  // ─────────────────────────────────────────────────────────────────────────────
 
   // Chip toggle (multi-select)
   function initChips(groupId, hiddenId) {
@@ -865,6 +869,15 @@
     new FormData(this).forEach((v, k) => data[k] = v);
     data['timestamp'] = new Date().toLocaleString('cs-CZ');
 
+    // Detekce nenakonfigurovaného Apps Script URL — silent failure preventer
+    if (APPS_SCRIPT_URL.indexOf('VASE_SCRIPT_ID') !== -1) {
+      alert('CHYBA KONFIGURACE: Apps Script URL nebyla nastavena. Data se neuloží do Google Sheet.\n\nOtevři HTML soubor v textovém editoru, najdi řádek s "VASE_SCRIPT_ID" a nahraď ho svou skutečnou URL.\n\nNávod: viz locum_apps_script_navod.html');
+      document.getElementById('btnText').style.display = 'block';
+      document.getElementById('spinner').style.display = 'none';
+      btn.disabled = false;
+      return;
+    }
+
     try {
       await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
@@ -872,8 +885,16 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+      // Pozn.: kvůli no-cors nemůžeme zkontrolovat response status.
+      // Skutečné ověření, že data dorazila, je v Google Sheetu.
+      console.log('Form data odeslána na Apps Script. Ověř v Google Sheet, že se objevil nový řádek.');
     } catch(err) {
-      console.warn('Fetch error (no-cors expected):', err);
+      console.error('Fetch error:', err);
+      alert('Nastala chyba při odesílání. Zkontroluj internetové připojení a zkus to znovu.\n\nTechnický detail: ' + err.message);
+      document.getElementById('btnText').style.display = 'block';
+      document.getElementById('spinner').style.display = 'none';
+      btn.disabled = false;
+      return;
     }
 
     document.getElementById('registrationForm').style.display = 'none';
